@@ -1,0 +1,70 @@
+apply plugin: 'com.android.library'
+//启用Jitpack 插件
+apply plugin: 'com.github.dcendents.android-maven'
+
+//设置Jitpack发布的Group
+//我的github账号是helen-x, 对应我的group就是com.github.helen-x
+group = 'com.github.YougaKing'
+def loader = 'fresco'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            if (loader == 'fresco') {
+                java.srcDirs = ['src/main/java', 'src/fresco/java']
+            } else if (loader == 'glide') {
+                java.srcDirs = ['src/main/java', 'src/glide/java']
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    if (loader == 'fresco') {
+        compileOnly 'com.facebook.fresco:fresco:1.10.0'
+        compileOnly 'com.facebook.fresco:animated-webp:1.10.0'
+        compileOnly 'com.facebook.fresco:webpsupport:1.10.0'
+        compileOnly 'com.facebook.fresco:imagepipeline-okhttp3:1.10.0'
+    } else if (loader == 'glide') {
+        compileOnly 'com.zlc.glide:webpdecoder:1.6.4.9.0'
+        compileOnly 'com.github.bumptech.glide:glide:4.9.0'
+        compileOnly 'com.github.bumptech.glide:annotations:4.9.0'
+        compileOnly 'com.github.bumptech.glide:okhttp3-integration:4.9.0' // 新增
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    }
+
+    compileOnly 'com.android.support:support-v4:27.1.1'
+    compileOnly 'com.android.support:support-annotations:27.1.1'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
