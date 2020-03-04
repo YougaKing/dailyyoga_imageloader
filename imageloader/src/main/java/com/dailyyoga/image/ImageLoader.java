@@ -18,6 +18,10 @@ public class ImageLoader {
         imageClassLoader.setInitializationLoader(initializationLoader);
     }
 
+    public static void initialize() {
+        imageClassLoader.initialize();
+    }
+
     public static ILoader with(@NonNull Activity activity) {
         return imageClassLoader.create().with(activity);
     }
@@ -55,6 +59,13 @@ public class ImageLoader {
         }
 
         @Override
+        public void initialize() {
+            if (initializationLoader != null) {
+                initializationLoader.initialize();
+            }
+        }
+
+        @Override
         @NonNull
         public GenericLoader create() {
 //            try {
@@ -65,9 +76,7 @@ public class ImageLoader {
 //                t.printStackTrace();
 //                return defaultLoader();
 //            }
-            if (initializationLoader != null) {
-                initializationLoader.initialize();
-            }
+            initialize();
             return new FrescoLoader();
         }
 
@@ -99,6 +108,8 @@ public class ImageLoader {
     private interface ClassLoader<T> {
 
         void setInitializationLoader(@NonNull InitializationLoader initializationLoader);
+
+        void initialize();
 
         @NonNull
         T create();
